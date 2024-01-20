@@ -59,4 +59,22 @@ public class GroupsTable extends AbsTable {
         db.executeRequest(sqlRequest);
     }
 
-}
+    public void showGroupsWithCurators (String groupsTableTableName, String curatorsTableTableName) {
+        try {
+            MySQLConnector db = new MySQLConnector();
+            final String sqlRequest = String.format("SELECT g.name, c.fio " +
+                            "from %s g left join %s c on g.id_curator = c.id order by g.name;",
+                    groupsTableTableName,
+                    curatorsTableTableName);
+            ResultSet rs = db.executeRequestWithAnswer(sqlRequest);
+            while (rs.next()) {
+                System.out.printf("%s | %s%n",
+                        rs.getString("g.name"),
+                        rs.getString("c.fio"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    }

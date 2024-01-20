@@ -54,22 +54,8 @@ public class Main {
                 curatorsTable.insertCurators(new Curator(44444, "Четвертак Чулпан Чеславовна"));
             }
 
-                try {
-                    MySQLConnector db = new MySQLConnector();
-                    final String sqlRequest = String.format("SELECT s.fio, s.sex, g.name, c.fio " +
-                            "from %s s left join %s g on s.id_group = g.id left join %s c on g.id_curator = c.id order by s.fio;",
-                            studentsTable.getTableName(),
-                            groupsTable.getTableName(),
-                            curatorsTable.getTableName());
-                    ResultSet rs = db.executeRequestWithAnswer(sqlRequest);
-                    while (rs.next()) {
-                        System.out.printf("%s | %s | %s | %s%n",
-                                rs.getString("s.fio"),
-                                rs.getString("s.sex"),
-                                rs.getString("g.name"),
-                                rs.getString("c.fio"));
-                    }
-                } catch (Exception e) { e.printStackTrace(); }
+            System.out.println("Информация о всех студентах:");
+            studentsTable.showAllStudents(studentsTable.getTableName(), groupsTable.getTableName(), curatorsTable.getTableName());
 
             System.out.printf("%nКоличество всех студентов: ");
             studentsTable.countOfStudents();
@@ -80,19 +66,7 @@ public class Main {
             groupsTable.updateGroup(44444);
             System.out.printf("%nУ 3 группы сменился куратор! Новые данные по кураторам:%n");
 
-            try {
-                MySQLConnector db = new MySQLConnector();
-                final String sqlRequest = String.format("SELECT g.name, c.fio " +
-                                "from %s g left join %s c on g.id_curator = c.id order by g.name;",
-                        groupsTable.getTableName(),
-                        curatorsTable.getTableName());
-                ResultSet rs = db.executeRequestWithAnswer(sqlRequest);
-                while (rs.next()) {
-                    System.out.printf("%s | %s%n",
-                            rs.getString("g.name"),
-                            rs.getString("c.fio"));
-                }
-            } catch (Exception e) { e.printStackTrace(); }
+            groupsTable.showGroupsWithCurators(groupsTable.getTableName(), curatorsTable.getTableName());
 
             System.out.printf("%nСписок студентов 3 группы:%n");
             studentsTable.studentsByGroup("Группа 3");

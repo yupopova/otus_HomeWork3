@@ -55,6 +55,27 @@ public class StudentsTable extends AbsTable {
         return result;
     }
 
+    public void showAllStudents(String studentsTableName, String groupsTableTableName, String curatorsTableTableName) {
+        try {
+            MySQLConnector db = new MySQLConnector();
+            final String sqlRequest = String.format("SELECT s.fio, s.sex, g.name, c.fio " +
+                            "from %s s left join %s g on s.id_group = g.id left join %s c on g.id_curator = c.id order by s.fio;",
+                    studentsTableName,
+                    groupsTableTableName,
+                    curatorsTableTableName);
+            ResultSet rs = db.executeRequestWithAnswer(sqlRequest);
+            while (rs.next()) {
+                System.out.printf("%s | %s | %s | %s%n",
+                        rs.getString("s.fio"),
+                        rs.getString("s.sex"),
+                        rs.getString("g.name"),
+                        rs.getString("c.fio"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void countOfStudents() {
         try {
         db = new MySQLConnector();
@@ -66,7 +87,6 @@ public class StudentsTable extends AbsTable {
         }
     } catch (Exception e) { e.printStackTrace(); }
 }
-
 
     public void showStudentsGirls(String sex) {
         try {
